@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import os
 import subprocess
-import sys
 from typing import Iterable, Optional
 
 from tree_sitter import Language, Parser
@@ -17,14 +16,13 @@ def _build_language_grammar(language_name: str) -> Language:
     try:
         subprocess.run(["tree-sitter", "--version"], capture_output=True, check=True)
     except (subprocess.CalledProcessError, FileNotFoundError):
-        print(f"⚠️  tree-sitter CLI not found. Please install it first:")
+        print("⚠️  tree-sitter CLI not found. Please install it first:")
         print("   npm install -g tree-sitter-cli")
         print("   or visit: https://tree-sitter.github.io/tree-sitter/creating-parsers#installation")
         raise RuntimeError("tree-sitter CLI is required for building grammars from source")
     
     # Create a temporary directory for building
     import tempfile
-    import shutil
     
     with tempfile.TemporaryDirectory() as temp_dir:
         # Clone the grammar repository
@@ -35,7 +33,7 @@ def _build_language_grammar(language_name: str) -> Language:
         subprocess.check_call(["git", "clone", "--depth", "1", grammar_repo, temp_dir])
         
         # Build the grammar
-        print(f"🔨 Building grammar...")
+        print("🔨 Building grammar...")
         subprocess.check_call(["tree-sitter", "generate"], cwd=temp_dir)
         
         # Load the built language
