@@ -16,7 +16,7 @@ Install
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/pierrelgol/autodoc-cli.git
 cd autodoc-cli
 
 # Create virtual environment and install in development mode
