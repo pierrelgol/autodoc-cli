@@ -20,6 +20,10 @@ classifiers = [
     "Topic :: Documentation",
     "Topic :: Software Development :: Documentation",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Text Processing :: Markup",
+    "Environment :: Console",
+    "Typing :: Typed",
 ]
 dependencies = [
   "typer>=0.12",

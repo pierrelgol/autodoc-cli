@@ -29,6 +29,11 @@ jobs:
     - name: Run tests
       run: |
         uv run pytest
+    
+    - name: Run linting
+      run: |
+        uv run mypy autodoc/
+        uv run ruff check .
 
   build-and-publish:
     needs: test
@@ -52,7 +57,13 @@ jobs:
     
     - name: Build package
       run: |
-        python -m build
+        uv build
+    
+    - name: Check package contents
+      run: |
+        ls -la dist/
+        uv pip install twine
+        python -m twine check dist/*
     
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
