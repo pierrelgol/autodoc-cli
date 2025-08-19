@@ -11,7 +11,7 @@ a = Analysis(
         'tree_sitter_languages.core',
         'tree_sitter_languages.languages',
     ],
-    hookspath=['hooks'],
+    hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],

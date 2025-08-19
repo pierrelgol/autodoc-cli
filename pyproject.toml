@@ -36,13 +36,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "ruff>=0.6",
-  "mypy>=1.10",
-  "pytest>=8.2",
-  "pytest-cov",
-  "python-lsp-server[all]>=1.11",
-  "types-requests>=2.32",
-  "types-tree-sitter-languages",
+    "pytest>=8.0.0",
+    "mypy>=1.0.0",
+    "ruff>=0.3.0",
+    "types-requests",
+    "types-tree-sitter-languages",
+    "pyinstaller",
 ]
 
 [tool.mypy]
