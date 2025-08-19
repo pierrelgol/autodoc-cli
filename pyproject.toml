@@ -1,0 +1,44 @@
+[project]
+name = "autodoc"
+version = "0.1.0"
+description = "CLI to auto-generate C doc comments using Tree-sitter and Ollama"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "typer[all]>=0.12",
+  "tree-sitter==0.20.4",
+  "tree-sitter-languages>=1.10.2",
+  "requests>=2.32",
+  "tqdm>=4.66",
+  "pathspec>=0.12",
+]
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.6",
+  "mypy>=1.10",
+  "pytest>=8.2",
+  "pytest-cov",
+  "python-lsp-server[all]>=1.11",
+  "types-requests>=2.32",
+]
+
+[tool.mypy]
+ignore_missing_imports = false
+
+[[tool.mypy.overrides]]
+module = "requests.*"
+ignore_missing_imports = true
+
+[project.scripts]
+autodoc = "autodoc.cli.main:main"
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project.urls]
+Homepage = "https://example.com"
+Source = "https://example.com/repo"
+Issues = "https://example.com/repo/issues"
+
