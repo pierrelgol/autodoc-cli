@@ -1,19 +1,24 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 a = Analysis(
     ['autodoc/cli/main.py'],
     pathex=[],
     binaries=[],
     datas=[],
-    hiddenimports=[],
-    hookspath=[],
+    hiddenimports=[
+        'tree_sitter',
+        'tree_sitter_languages',
+        'tree_sitter_languages.core',
+        'tree_sitter_languages.languages',
+    ],
+    hookspath=['hooks'],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
     noarchive=False,
     optimize=0,
 )
+
 pyz = PYZ(a.pure)
 
 exe = EXE(
