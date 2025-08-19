@@ -1,9 +1,26 @@
 [project]
-name = "autodoc"
+name = "autodoc-cli"  # or another available name
 version = "0.1.0"
 description = "CLI to auto-generate C doc comments using Tree-sitter and Ollama"
 readme = "README.md"
 requires-python = ">=3.12"
+license = {text = "MIT"}
+authors = [
+    {name = "PierreLgol", email = "plgol.perso@gmail.com"},
+]
+keywords = ["documentation", "c", "tree-sitter", "ollama", "cli"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Documentation",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = [
   "typer>=0.12",
   "tree-sitter==0.20.4",
@@ -37,8 +54,12 @@ autodoc = "autodoc.cli.main:main"
 requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.wheel]
+packages = ["autodoc"]
+
 [project.urls]
-Homepage = "https://example.com"
-Source = "https://example.com/repo"
-Issues = "https://example.com/repo/issues"
+Homepage = "https://github.com/pierrelgol/autodoc-cli"
+Source = "https://github.com/pierrelgol/autodoc-cli"
+Issues = "https://github.com/pierrelgol/autodoc-cli/issues"
+Documentation = "https://github.com/pierrelgol/autodoc-cli#readme"
 
