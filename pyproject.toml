@@ -38,6 +38,7 @@ dev = [
   "pytest-cov",
   "python-lsp-server[all]>=1.11",
   "types-requests>=2.32",
+  "types-tree-sitter-languages",
 ]
 
 [tool.mypy]
@@ -53,6 +54,13 @@ autodoc = "autodoc.cli.main:main"
 [build-system]
 requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.17.1",
+    "ruff>=0.12.9",
+    "types-tree-sitter-languages>=1.10.0.20250530",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["autodoc"]

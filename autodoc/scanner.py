@@ -112,7 +112,7 @@ def process_file(path: Path, db: HashDatabase, llm: OllamaClient, dry_run: bool 
     source = path.read_bytes()
 
     # Pre-sanitize any problematic existing comments that could break parsing (e.g., nested comment markers or code fences)
-    pre_sanitized_edits: List[ReplaceEdit] = []
+    pre_sanitized_edits: List[ReplaceEdit | PlanEdit] = []
     plans: List[str] = []
     tree = adapter.parser.parse(source)  # type: ignore[attr-defined]
     root = tree.root_node
@@ -147,7 +147,7 @@ def process_file(path: Path, db: HashDatabase, llm: OllamaClient, dry_run: bool 
     # Continue with planned function-level changes
 
     # First pass: stage replacements for existing docs (no in-place writes) to avoid offset drift
-    staged_edits: List[ReplaceEdit] = []
+    staged_edits: List[ReplaceEdit | PlanEdit] = []
     # First pass: handle updates (existing docs)
     for func in functions:
         body = adapter.get_function_body(source, func)
@@ -256,10 +256,13 @@ def process_directory(root: Path, db: HashDatabase, llm: OllamaClient, dry_run: 
     total: Dict[str, int | List[str]] = {"files": 0, "functions": 0, "new": 0, "updated": 0, "skipped": 0, "plans": []}
     for f in files:
         stats, plans = process_file(f, db=db, llm=llm, dry_run=dry_run)
-        total["files"] += 1
+        total["files"] = total["files"] + 1  # type: ignore[operator]
         for k in ("functions", "new", "updated", "skipped"):
-            total[k] = int(total[k]) + int(stats[k])  # type: ignore[index]
-        total_plans = total["plans"]  # type: ignore[index]
+            assert isinstance(total[k], int)
+            assert isinstance(stats[k], int)
+            total[k] = total[k] + stats[k]  # type: ignore[operator]
+        total_plans = total["plans"]
+        assert isinstance(total_plans, list)
         total_plans.extend(plans)
     return total
 

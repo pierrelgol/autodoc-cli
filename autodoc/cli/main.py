@@ -36,16 +36,19 @@ def run(
     summary = process_directory(target_path, db=db, llm=llm, dry_run=dry_run)
 
     if dry_run:
-        for line in summary.get("plans", []):  # type: ignore[arg-type]
-            typer.echo(line)
+        plans = summary.get("plans", [])
+        if isinstance(plans, list):
+            for line in plans:
+                typer.echo(line)
 
     typer.echo(
         f"Processed files: {summary['files']} | functions: {summary['functions']} | new: {summary['new']} | updated: {summary['updated']} | skipped: {summary['skipped']}"
     )
 
 
-def main() -> None:
+def main() -> int:
     app()
+    return 0
 
 
 if __name__ == "__main__":

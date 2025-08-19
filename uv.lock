@@ -32,6 +32,14 @@ dev = [
     { name = "python-lsp-server", extra = ["all"] },
     { name = "ruff" },
     { name = "types-requests" },
+    { name = "types-tree-sitter-languages" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "ruff" },
+    { name = "types-tree-sitter-languages" },
 ]
 
 [package.metadata]
@@ -48,8 +56,16 @@ requires-dist = [
     { name = "tree-sitter-languages", specifier = ">=1.10.2" },
     { name = "typer", specifier = ">=0.12" },
     { name = "types-requests", marker = "extra == 'dev'", specifier = ">=2.32" },
+    { name = "types-tree-sitter-languages", marker = "extra == 'dev'" },
 ]
 provides-extras = ["dev"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy", specifier = ">=1.17.1" },
+    { name = "ruff", specifier = ">=0.12.9" },
+    { name = "types-tree-sitter-languages", specifier = ">=1.10.0.20250530" },
+]
 
 [[package]]
 name = "autopep8"
@@ -752,6 +768,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ed/b0/9355adb86ec84d057fea765e4c49cce592aaf3d5117ce5609a95a7fc3dac/types_requests-2.32.4.20250809.tar.gz", hash = "sha256:d8060de1c8ee599311f56ff58010fb4902f462a1470802cf9f6ed27bc46c4df3", size = 23027, upload-time = "2025-08-09T03:17:10.664Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2b/6f/ec0012be842b1d888d46884ac5558fd62aeae1f0ec4f7a581433d890d4b5/types_requests-2.32.4.20250809-py3-none-any.whl", hash = "sha256:f73d1832fb519ece02c85b1f09d5f0dd3108938e7d47e7f94bbfa18a6782b163", size = 20644, upload-time = "2025-08-09T03:17:09.716Z" },
+]
+
+[[package]]
+name = "types-tree-sitter-languages"
+version = "1.10.0.20250530"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "tree-sitter" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e6/ea/c487b80120f909fe31115fbc9dfc49a3d9f7c7d5dc2193e507e717355d7e/types_tree_sitter_languages-1.10.0.20250530.tar.gz", hash = "sha256:c7350aeff95f84a7fb0ac90ddb615233db1459a3d9305bab304075462ffe810c", size = 7939, upload-time = "2025-05-30T17:05:41.235Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/70/4f/83922e3cd6415b399c2c83ce54966af143e423e1e5585decd90af2994716/types_tree_sitter_languages-1.10.0.20250530-py3-none-any.whl", hash = "sha256:06be82a29befc1b891b31672e91b979a0d1d8f148d12715172efbd380c520af3", size = 8042, upload-time = "2025-05-30T17:05:40.123Z" },
 ]
 
 [[package]]

@@ -27,7 +27,7 @@ class CAdapter(LanguageAdapter):
                 yield self._extract_function_info(source_code, current)
 
     # Helper traversal to iterate all nodes
-    def _walk(self, node):
+    def _walk(self, node) -> Iterable:
         stack = [node]
         while stack:
             n = stack.pop()
@@ -36,11 +36,7 @@ class CAdapter(LanguageAdapter):
                 stack.append(child)
 
     def _extract_function_info(self, source_code: bytes, node) -> FunctionInfo:
-        # Structure of function_definition according to tree-sitter-c:
-        # (function_definition
-        #   type: (primitive_type | type_identifier | ...)
-        #   declarator: (function_declarator (identifier) (parameter_list))
-        #   body: (compound_statement ...))
+        # Extract function information from tree-sitter AST node.
         # Optional preceeding comment nodes will be identified by scanning preceding siblings that are comments.
 
         # Find name
