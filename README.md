@@ -5,24 +5,53 @@ CLI tool that generates documentation comments for source code using Tree-sitter
 
 Requirements
 ------------
-- Python 3.13+
+- Python 3.12+
 - `uv` for environment management
 - Ollama running locally with a compatible code model (e.g., `qwen2.5-coder:7b`)
 
 Install
 -------
 
+### Development Installation
+
 ```bash
-uv venv && source .venv/bin/activate
+# Clone the repository
+git clone <repository-url>
+cd autodoc-cli
+
+# Create virtual environment and install in development mode
+uv venv --python 3.12.11
 uv pip install -e .[dev]
+```
+
+### Production Installation
+
+```bash
+# Install from PyPI (when published)
+uv pip install autodoc
+
+# Or install from local wheel
+uv pip install dist/autodoc-0.1.0-py3-none-any.whl
 ```
 
 Usage
 -----
 
 ```bash
-source .venv/bin/activate
+# Basic usage
 autodoc /path/to/target --model qwen2.5-coder:7b
+
+# Dry run to see what would be changed
+autodoc /path/to/target --dry-run
+
+# Use a different model
+autodoc /path/to/target --model llama3.1:8b
+
+# Specify a custom database location
+autodoc /path/to/target --db /path/to/custom.db
+
+# Example: Generate documentation for a C project
+autodoc /path/to/c-project --model qwen2.5-coder:7b
 ```
 
 By default, a SQLite DB `.autodoc.sqlite` will be created in the target directory to track function body hashes for change detection.
@@ -35,6 +64,35 @@ How it works
   - If a doc exists but the hash changed, the doc is regenerated and replaced.
   - If no doc exists, a new doc comment is generated and inserted above the function.
 - Edits are applied directly to the source files and are idempotent.
+
+Example
+-------
+
+Before running autodoc:
+```c
+int calculate_fibonacci(int n) {
+    if (n <= 1) {
+        return n;
+    }
+    return calculate_fibonacci(n - 1) + calculate_fibonacci(n - 2);
+}
+```
+
+After running `autodoc . --model qwen2.5-coder:7b`:
+```c
+/**
+ * Calculates the nth Fibonacci number using recursion.
+ *
+ * @param n The position in the Fibonacci sequence (0-based).
+ * @return The Fibonacci number at position n.
+ */
+int calculate_fibonacci(int n) {
+    if (n <= 1) {
+        return n;
+    }
+    return calculate_fibonacci(n - 1) + calculate_fibonacci(n - 2);
+}
+```
 
 Notes
 -----
