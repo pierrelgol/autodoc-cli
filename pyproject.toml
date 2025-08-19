@@ -48,6 +48,12 @@ ignore_missing_imports = false
 module = "requests.*"
 ignore_missing_imports = true
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
 [project.scripts]
 autodoc = "autodoc.cli.main:main"
 
@@ -58,6 +64,7 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "mypy>=1.17.1",
+    "pytest>=8.4.1",
     "ruff>=0.12.9",
     "types-tree-sitter-languages>=1.10.0.20250530",
 ]
