@@ -27,13 +27,15 @@ jobs:
     
     - name: Create virtual environment and install dependencies
       run: |
-        uv venv
+        uv venv --python ${{ matrix.python-version }}
         uv pip install -e .[dev]
         uv pip install pyinstaller
+      shell: bash
     
     - name: Run tests
       run: |
         uv run pytest
+      shell: bash
     
     - name: Build binary
       run: |

@@ -49,7 +49,7 @@ git clone https://github.com/pierrelgol/autodoc-cli.git
 cd autodoc-cli
 
 # Create virtual environment and install in development mode
-uv venv --python 3.12.11
+uv venv --python 3.12
 uv pip install -e .[dev]
 
 # Build binary locally
