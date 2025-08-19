@@ -12,6 +12,35 @@ Requirements
 Install
 -------
 
+### Binary Installation (Recommended)
+
+Download the latest binary for your platform from the [GitHub releases](https://github.com/pierrelgol/autodoc-cli/releases):
+
+```bash
+# Linux
+wget https://github.com/pierrelgol/autodoc-cli/releases/latest/download/autodoc-linux-x86_64
+chmod +x autodoc-linux-x86_64
+./autodoc-linux-x86_64 --help
+
+# macOS
+wget https://github.com/pierrelgol/autodoc-cli/releases/latest/download/autodoc-macos-x86_64
+chmod +x autodoc-macos-x86_64
+./autodoc-macos-x86_64 --help
+
+# Windows
+# Download autodoc-windows-x86_64.exe from the releases page
+```
+
+### Python Package Installation
+
+```bash
+# Install from PyPI
+pip install autodoc-cli
+
+# Or using uv
+uv pip install autodoc-cli
+```
+
 ### Development Installation
 
 ```bash
@@ -22,16 +51,9 @@ cd autodoc-cli
 # Create virtual environment and install in development mode
 uv venv --python 3.12.11
 uv pip install -e .[dev]
-```
 
-### Production Installation
-
-```bash
-# Install from PyPI (when published)
-uv pip install autodoc
-
-# Or install from local wheel
-uv pip install dist/autodoc-0.1.0-py3-none-any.whl
+# Build binary locally
+./build_binary.sh
 ```
 
 Usage
