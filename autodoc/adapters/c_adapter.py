@@ -12,15 +12,6 @@ from .base import ByteRange, FunctionInfo, LanguageAdapter
 
 def _build_language_grammar(language_name: str) -> Language:
     """Build a tree-sitter language grammar from source when bundled version fails."""
-    # Check if tree-sitter CLI is available
-    try:
-        subprocess.run(["tree-sitter", "--version"], capture_output=True, check=True)
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        print("⚠️  tree-sitter CLI not found. Please install it first:")
-        print("   npm install -g tree-sitter-cli")
-        print("   or visit: https://tree-sitter.github.io/tree-sitter/creating-parsers#installation")
-        raise RuntimeError("tree-sitter CLI is required for building grammars from source")
-    
     # Create a temporary directory for building
     import tempfile
     
