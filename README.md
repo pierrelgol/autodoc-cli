@@ -1,56 +1,18 @@
-# autodoc-cli
+AutoDoc
+=======
 
-A command-line tool that automatically generates and updates documentation for your code using AI.
+CLI tool that generates documentation comments for source code using Tree-sitter parsing and a local Ollama model. Initially supports C (`.c`, `.h`).
 
-## Features
+Requirements
+------------
+- Python 3.12+
+- `uv` for environment management
+- Ollama running locally with a compatible code model (e.g., `qwen2.5-coder:7b`)
 
-- 🤖 **AI-Powered**: Uses Ollama to generate intelligent documentation
-- 🔄 **Smart Updates**: Only updates documentation when code changes
-- 📝 **Multi-Language**: Currently supports C (more languages coming soon)
-- 💾 **Persistent Storage**: Tracks changes using SQLite database
-- 🎯 **Precise**: Uses Tree-sitter for accurate code parsing
+Install
+-------
 
-## Binary Installation (Recommended)
-
-Download the latest binary for your platform from [GitHub Releases](https://github.com/pierrelgol/autodoc-cli/releases):
-
-### Linux
-```bash
-# Download and make executable
-wget https://github.com/pierrelgol/autodoc-cli/releases/latest/download/autodoc-linux-x86_64
-chmod +x autodoc-linux-x86_64
-./autodoc-linux-x86_64 --help
-```
-
-### macOS
-```bash
-# Download and make executable
-wget https://github.com/pierrelgol/autodoc-cli/releases/latest/download/autodoc-macos-x86_64
-chmod +x autodoc-macos-x86_64
-./autodoc-macos-x86_64 --help
-```
-
-### Windows
-```bash
-# Download and run
-curl -L -o autodoc-windows-x86_64.exe https://github.com/pierrelgol/autodoc-cli/releases/latest/download/autodoc-windows-x86_64.exe
-./autodoc-windows-x86_64.exe --help
-```
-
-**Note**: The binary includes a fallback mechanism that can build tree-sitter grammars from source if the bundled ones fail to load. This requires the `tree-sitter` CLI tool to be installed:
-
-```bash
-# Install tree-sitter CLI (required for fallback)
-npm install -g tree-sitter-cli
-```
-
-## Python Package Installation
-
-```bash
-pip install autodoc-cli
-```
-
-## Development Installation
+### Development Installation
 
 ```bash
 # Clone the repository
@@ -58,65 +20,84 @@ git clone https://github.com/pierrelgol/autodoc-cli.git
 cd autodoc-cli
 
 # Create virtual environment and install in development mode
-uv venv --python 3.12
+uv venv --python 3.12.11
 uv pip install -e .[dev]
 ```
 
-## Usage
-
-### Basic Usage
+### Production Installation
 
 ```bash
-# Generate documentation for a directory
-autodoc /path/to/your/code
+# Install from PyPI (when published)
+uv pip install autodoc
 
-# Use a specific Ollama model
-autodoc /path/to/your/code --model llama3.2:3b
-
-# Preview changes without modifying files
-autodoc /path/to/your/code --dry-run
+# Or install from local wheel
+uv pip install dist/autodoc-0.1.0-py3-none-any.whl
 ```
 
-### Options
+Usage
+-----
 
-- `--model`: Ollama model name/tag (default: `qwen2.5-coder:7b`)
-- `--db`: Path to SQLite database (defaults to `.autodoc.sqlite` in project root)
-- `--dry-run`: Do not modify files; print planned changes
+```bash
+# Basic usage
+autodoc /path/to/target --model qwen2.5-coder:7b
 
-## Requirements
+# Dry run to see what would be changed
+autodoc /path/to/target --dry-run
 
-- **Ollama**: Must be running locally with the specified model
-- **Tree-sitter CLI**: Required for fallback grammar building (install via `npm install -g tree-sitter-cli`)
+# Use a different model
+autodoc /path/to/target --model llama3.1:8b
 
-## How It Works
+# Specify a custom database location
+autodoc /path/to/target --db /path/to/custom.db
 
-1. **Scans** your code directory recursively
-2. **Parses** code using Tree-sitter for accurate AST analysis
-3. **Tracks** changes using a SQLite database
-4. **Generates** documentation using Ollama AI
-5. **Updates** only when code has actually changed
+# Example: Generate documentation for a C project
+autodoc /path/to/c-project --model qwen2.5-coder:7b
+```
 
-## Fallback Mechanism
+By default, a SQLite DB `.autodoc.sqlite` will be created in the target directory to track function body hashes for change detection.
 
-If the bundled tree-sitter grammars fail to load (common in PyInstaller binaries), the tool will automatically:
+How it works
+------------
+- Tree-sitter is used to parse C files into ASTs. No regex is used for detection.
+- For each function:
+  - If a doc comment exists and the function hash matches the DB, the function is skipped.
+  - If a doc exists but the hash changed, the doc is regenerated and replaced.
+  - If no doc exists, a new doc comment is generated and inserted above the function.
+- Edits are applied directly to the source files and are idempotent.
 
-1. Detect the failure
-2. Clone the grammar repository from GitHub
-3. Build the grammar from source using `tree-sitter generate`
-4. Load the freshly built grammar
+Example
+-------
 
-This ensures the tool works reliably across different platforms and environments.
+Before running autodoc:
+```c
+int calculate_fibonacci(int n) {
+    if (n <= 1) {
+        return n;
+    }
+    return calculate_fibonacci(n - 1) + calculate_fibonacci(n - 2);
+}
+```
 
-## Contributing
+After running `autodoc . --model qwen2.5-coder:7b`:
+```c
+/**
+ * Calculates the nth Fibonacci number using recursion.
+ *
+ * @param n The position in the Fibonacci sequence (0-based).
+ * @return The Fibonacci number at position n.
+ */
+int calculate_fibonacci(int n) {
+    if (n <= 1) {
+        return n;
+    }
+    return calculate_fibonacci(n - 1) + calculate_fibonacci(n - 2);
+}
+```
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details.
+Notes
+-----
+- Only C is supported currently. Additional languages can be added by implementing the `LanguageAdapter` interface in `autodoc/adapters`.
+- Ensure Ollama is running locally: `ollama serve` and that the model is available: `ollama pull qwen2.5-coder:7b`.
+- If you prefer uvx, be aware that `uvx autodoc` may resolve to the PyPI package named `autodoc`. Use the local script instead: `.venv/bin/autodoc`.
 
 

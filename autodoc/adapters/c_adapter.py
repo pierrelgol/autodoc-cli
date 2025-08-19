@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-import subprocess
 from typing import Iterable, Optional
 
 from tree_sitter import Language, Parser
@@ -10,40 +8,12 @@ from tree_sitter_languages import get_language
 from .base import ByteRange, FunctionInfo, LanguageAdapter
 
 
-def _build_language_grammar(language_name: str) -> Language:
-    """Build a tree-sitter language grammar from source when bundled version fails."""
-    # Create a temporary directory for building
-    import tempfile
-    
-    with tempfile.TemporaryDirectory() as temp_dir:
-        # Clone the grammar repository
-        grammar_repo = f"https://github.com/tree-sitter/tree-sitter-{language_name}"
-        print(f"🔨 Building {language_name} grammar from source...")
-        print(f"📥 Cloning {grammar_repo}")
-        
-        subprocess.check_call(["git", "clone", "--depth", "1", grammar_repo, temp_dir])
-        
-        # Build the grammar
-        print("🔨 Building grammar...")
-        subprocess.check_call(["tree-sitter", "generate"], cwd=temp_dir)
-        
-        # Load the built language
-        language_path = os.path.join(temp_dir, "src", "tree_sitter_parser")
-        return Language(language_path, language_name)
-
-
 class CAdapter(LanguageAdapter):
     language_name = "c"
 
     def __init__(self) -> None:
-        # Initialize parser for C with fallback to building from source
-        try:
-            self.language: Language = get_language("c")
-        except (OSError, ImportError) as e:
-            print(f"⚠️  Failed to load bundled C grammar: {e}")
-            print("🔄 Attempting to build from source...")
-            self.language = _build_language_grammar("c")
-        
+        # Initialize parser for C
+        self.language: Language = get_language("c")
         self.parser: Parser = Parser()
         self.parser.set_language(self.language)
 
